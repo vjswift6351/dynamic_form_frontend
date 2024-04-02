@@ -1,8 +1,11 @@
 import { Box, Button, Card, CardContent, CardHeader, FormControl, FormHelperText, Grid, InputLabel, OutlinedInput, TextField, Typography } from '@mui/material'
-import React from 'react'
+import React, { useEffect } from 'react'
 import * as yup from 'yup'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { addUser, updateUser } from '@/services'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const schema = yup.object().shape({
     username: yup.string().required(),
@@ -10,10 +13,12 @@ const schema = yup.object().shape({
     password: yup.string().min(5).required()
   })
 
-const RegisterPage = ({createUser, setCreateUser}) => {
+const RegisterPage = ({createUser, setCreateUser, pageTitle, editUser, getUserList}) => {
     const {
         control,
         setError,
+        reset,
+        setValue,
         handleSubmit,
         formState: { errors }
         } = useForm({
@@ -21,16 +26,53 @@ const RegisterPage = ({createUser, setCreateUser}) => {
         resolver: yupResolver(schema)
     })
 
+    useEffect(()=>{
+        if(editUser){
+            setValue('username', editUser.username)
+            setValue('email', editUser.email)
+            setValue('password', editUser.password)
+        }
+    },[editUser])
+
     const onSubmit = data => {
-        
-        console.log(data)
+        if(pageTitle === 'Create User'){
+            addUser(data).then(res => {
+                const response = res.data;
+                console.log('test',response)
+                toast.success("User Added");
+                resetFormValues()
+            })
+            .catch((err)=>{console.log(err)})
+        }
+        else{
+            updateUser(editUser._id,data).then(res => {
+                const response = res.data;
+                console.log('test',response)
+                toast.success("User Updated");
+                resetFormValues()
+            })
+            .catch((err)=>{console.log(err)})
+        }
+    }
+
+    const goBackFn = () =>{
+        setCreateUser(!createUser)
+        getUserList()
+    }
+
+    const resetFormValues = () =>{
+        reset({
+            username: "",
+            email: "",
+            password: ""
+        })
     }
 
   return (
     <Box sx={{display:'flex', justifyContent:'center', alignItems:'center', height:'100vh'}}>
         <Card sx={{width:'500px'}}>
             <CardHeader 
-                 title="Register User"
+                 title={pageTitle}
                  subheader="Please enter below details"
                  sx={{textAlign:'center'}}
             />
@@ -103,7 +145,7 @@ const RegisterPage = ({createUser, setCreateUser}) => {
                         <Button fullWidth size='large' type='submit' variant='contained' sx={{ mb: 4 }}>
                             Register
                         </Button>
-                        <Button onClick={()=>setCreateUser(!createUser)} fullWidth size='large' type='submit' variant='contained' sx={{ mb: 4 }}>
+                        <Button onClick={()=> goBackFn()} fullWidth size='large' type='submit' variant='contained' sx={{ mb: 4 }}>
                             Go Back
                         </Button>
                     </form>               
@@ -113,6 +155,7 @@ const RegisterPage = ({createUser, setCreateUser}) => {
                 </Grid>
             </CardContent>
         </Card>
+        <ToastContainer />
     </Box>
   )
 }
