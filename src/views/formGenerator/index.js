@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import FieldArray from "./fieldArray";
 import { Button, Grid, TextField } from "@mui/material";
+import { addForm } from "@/services";
 
 const defaultValues = {
   formsCollections: [
@@ -83,7 +84,8 @@ const defaultValues = {
   formDescription: "Please Fill out all the required fields",
 };
 
-const FormGenerator = ({formTitle, createForm, setCreateForm}) => {
+const FormGenerator = ({ formTitle, createForm, setCreateForm }) => {
+  const [pageTitle, setPageTitle] = useState("Create User");
   const {
     control,
     register,
@@ -107,12 +109,42 @@ const FormGenerator = ({formTitle, createForm, setCreateForm}) => {
       formsCollections: updateForm,
     };
     console.log(finalForm, "1234");
+
+    if (pageTitle === "Create User") {
+      addForm(data)
+        .then((res) => {
+          const response = res.data;
+          console.log("test", response);
+          // toast.success("User Added");
+          // resetFormValues();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      updateUser(editUser._id, data)
+        .then((res) => {
+          const response = res.data;
+          console.log("test", response);
+          toast.success("User Updated");
+          resetFormValues();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <h1>{formTitle}</h1>
-      <Button variant="contained" sx={{float:'right'}} onClick={()=>setCreateForm(!createForm)}>Go Back</Button>
+      <Button
+        variant="contained"
+        sx={{ float: "right" }}
+        onClick={() => setCreateForm(!createForm)}
+      >
+        Go Back
+      </Button>
       {/* <p>
         The following example demonstrate the ability of building nested array
         fields.
