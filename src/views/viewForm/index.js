@@ -1,3 +1,4 @@
+import { getForm } from "@/services";
 import {
   Button,
   FormControl,
@@ -7,109 +8,34 @@ import {
   TextField,
   Typography,
   Select,
+  Box,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-const FormGenerator = () => {
+
+const ViewForm = ({formData, handleClose, submitForm}) => {
   const { register, handleSubmit, setValue, getValues } = useForm();
-  const [formData, setFormData] = useState({
-    formsCollections: [
-      {
-        headingName: "Text Field",
-        type: "text",
-        label: "Student Name",
-        name: "studentname",
-        regex: null,
-        defaultValue: "",
-        placeholder: null,
-        errorMessage: "Student Name is required",
-        disabled: "",
-        required: true,
-        visible: "",
-        row: false,
-        options: [],
-      },
-      {
-        headingName: "Number Field",
-        type: "number",
-        label: "Age",
-        name: "age",
-        regex: null,
-        defaultValue: "",
-        placeholder: null,
-        errorMessage: "Age is required",
-        disabled: "",
-        required: true,
-        visible: "",
-        row: false,
-        options: [],
-      },
-      {
-        headingName: "Select Field",
-        type: "select",
-        label: "Gender",
-        name: "gender",
-        regex: null,
-        defaultValue: "",
-        placeholder: null,
-        errorMessage: "Gender is required",
-        disabled: "",
-        required: true,
-        visible: "",
-        row: false,
-        options: [
-          {
-            value: "male",
-            label: "Male",
-          },
-          {
-            value: "female",
-            label: "Female",
-          },
-          {
-            value: "others",
-            label: "others",
-          },
-        ],
-      },
-      {
-        headingName: "Email Field",
-        type: "email",
-        label: "Student Email",
-        name: "studentemail",
-        regex: null,
-        defaultValue: "",
-        placeholder: null,
-        errorMessage: "Email is required",
-        disabled: "",
-        required: true,
-        visible: "",
-        row: false,
-        options: [],
-      },
-    ],
-    formName: "ID Card Form",
-    formDescription: "Please Fill out all the required fields",
-  });
 
   const onSubmit = async (data) => {
-    console.log(data);
+    submitForm()
   };
 
   const values = getValues();
 
+
+
   return (
     <Grid container spacing={3}>
       <Grid item xs={12}>
-        <Typography variant="h5">{formData.formName}</Typography>
+        <Typography variant="h5">{formData?.formName}</Typography>
       </Grid>
       <Grid item xs={12}>
-        <Typography variant="p">{formData.formDescription}</Typography>
+        <Typography variant="p">{formData?.formDescription}</Typography>
       </Grid>
       <Grid item xs={12}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={3}>
-            {formData.formsCollections.map((data, i) => {
+            {formData?.formsCollections?.map((data, i) => {
               return (
                 <>
                   {data.type == "select" ? (
@@ -150,10 +76,16 @@ const FormGenerator = () => {
                 </>
               );
             })}
+            
             <Grid item xs={12}>
-              <Button color="success" variant="contained" type="submit">
-                Save Form
-              </Button>
+              <Box sx={{display:'flex', justifyContent:'center', alignItems:'center'}}>
+                <Button sx={{marginRight:'10px'}} onClick={handleClose} color="error" variant="contained" type="submit">
+                  Close
+                </Button>
+                <Button color="success" variant="contained" type="submit">
+                  Save Form
+                </Button>
+              </Box>
             </Grid>
           </Grid>
         </form>
@@ -162,4 +94,4 @@ const FormGenerator = () => {
   );
 };
 
-export default FormGenerator;
+export default ViewForm;

@@ -1,89 +1,91 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import FieldArray from "./fieldArray";
 import { Button, Grid, TextField } from "@mui/material";
+import { addForm, updateForms } from "@/services";
+import { ToastContainer, toast } from 'react-toastify';
 
-const defaultValues = {
-  formsCollections: [
-    {
-      headingName: "Text Field",
-      type: "text",
-      label: "Student Name",
-      name: "studentname",
-      regex: null,
-      defaultValue: "",
-      placeholder: null,
-      errorMessage: "Student Name is required",
-      disabled: "",
-      required: true,
-      visible: "",
-      row: false,
-      options: [],
-    },
-    {
-      headingName: "Number Field",
-      type: "number",
-      label: "Age",
-      name: "age",
-      regex: null,
-      defaultValue: "",
-      placeholder: null,
-      errorMessage: "Age is required",
-      disabled: "",
-      required: true,
-      visible: "",
-      row: false,
-      options: [],
-    },
-    {
-      headingName: "Select Field",
-      type: "select",
-      label: "Gender",
-      name: "gender",
-      regex: null,
-      defaultValue: "",
-      placeholder: null,
-      errorMessage: "Gender is required",
-      disabled: "",
-      required: true,
-      visible: "",
-      row: false,
-      options: [
-        {
-          value: "male",
-          label: "Male",
-        },
-        {
-          value: "female",
-          label: "Female",
-        },
-        {
-          value: "others",
-          label: "others",
-        },
-      ],
-    },
-    {
-      headingName: "Email Field",
-      type: "email",
-      label: "Student Email",
-      name: "studentemail",
-      regex: null,
-      defaultValue: "",
-      placeholder: null,
-      errorMessage: "Email is required",
-      disabled: "",
-      required: true,
-      visible: "",
-      row: false,
-      options: [],
-    },
-  ],
-  formName: "ID Card Form",
-  formDescription: "Please Fill out all the required fields",
-};
+// const defaultValues = {
+//   formsCollections: [
+//     {
+//       headingName: "Text Field",
+//       type: "text",
+//       label: "Student Name",
+//       name: "studentname",
+//       regex: null,
+//       defaultValue: "",
+//       placeholder: null,
+//       errorMessage: "Student Name is required",
+//       disabled: "",
+//       required: true,
+//       visible: "",
+//       row: false,
+//       options: [],
+//     },
+//     {
+//       headingName: "Number Field",
+//       type: "number",
+//       label: "Age",
+//       name: "age",
+//       regex: null,
+//       defaultValue: "",
+//       placeholder: null,
+//       errorMessage: "Age is required",
+//       disabled: "",
+//       required: true,
+//       visible: "",
+//       row: false,
+//       options: [],
+//     },
+//     {
+//       headingName: "Select Field",
+//       type: "select",
+//       label: "Gender",
+//       name: "gender",
+//       regex: null,
+//       defaultValue: "",
+//       placeholder: null,
+//       errorMessage: "Gender is required",
+//       disabled: "",
+//       required: true,
+//       visible: "",
+//       row: false,
+//       options: [
+//         {
+//           value: "male",
+//           label: "Male",
+//         },
+//         {
+//           value: "female",
+//           label: "Female",
+//         },
+//         {
+//           value: "others",
+//           label: "others",
+//         },
+//       ],
+//     },
+//     {
+//       headingName: "Email Field",
+//       type: "email",
+//       label: "Student Email",
+//       name: "studentemail",
+//       regex: null,
+//       defaultValue: "",
+//       placeholder: null,
+//       errorMessage: "Email is required",
+//       disabled: "",
+//       required: true,
+//       visible: "",
+//       row: false,
+//       options: [],
+//     },
+//   ],
+//   formName: "ID Card Form",
+//   formDescription: "Please Fill out all the required fields",
+// };
 
-const FormGenerator = ({formTitle, createForm, setCreateForm}) => {
+const FormGenerator = ({formTitle, createForm, setCreateForm, defaultValues, formId}) => {
   const {
     control,
     register,
@@ -96,6 +98,13 @@ const FormGenerator = ({formTitle, createForm, setCreateForm}) => {
   } = useForm({
     defaultValues,
   });
+
+  // useEffect(() => {
+  //   let defaultValues = {};
+  //   defaultValues = defaultForm
+  //   reset({ ...defaultValues });
+  // }, []);
+
   const onSubmit = (data) => {
     let updateForm = data.formsCollections;
     updateForm.map((data, i) => {
@@ -105,9 +114,38 @@ const FormGenerator = ({formTitle, createForm, setCreateForm}) => {
     let finalForm = {
       ...data,
       formsCollections: updateForm,
-    };
-    console.log(finalForm, "1234");
+    };   
+
+    let format = {
+      forms: finalForm
+    }
+
+    if(formTitle === 'Create Form'){
+      addForm(format).then(res => {
+        const response = res.data;
+        console.log('test',response)
+        toast.success("Form Added");
+        // resetFormValues()
+    })
+    .catch((err)=>{console.log(err)})
+  }
+  else{
+      updateForms(formId,format).then(res => {
+          const response = res.data;
+          toast.success("Form Updated");
+          // resetFormValues()
+      })
+      .catch((err)=>{console.log(err)})
+  }
   };
+
+  const resetFormValues = () =>{
+    reset({
+        username: "",
+        email: "",
+        password: ""
+    })
+}
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -183,6 +221,7 @@ const FormGenerator = ({formTitle, createForm, setCreateForm}) => {
       </button>
 
       <input type="submit" /> */}
+      <ToastContainer />
     </form>
   );
 };

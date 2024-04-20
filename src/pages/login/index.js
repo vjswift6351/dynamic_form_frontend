@@ -3,6 +3,10 @@ import React from 'react'
 import * as yup from 'yup'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { getUser } from '@/services'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useRouter } from 'next/router'
 
 const schema = yup.object().shape({
     email: yup.string().email().required(),
@@ -20,9 +24,48 @@ const LoginPage = () => {
         resolver: yupResolver(schema)
     })
 
+    const router = useRouter()
+
     const onSubmit = data => {
-        
         console.log(data)
+        getUserList(data)
+    }
+
+    const getUserList = (val) => {
+        getUser().then(res => {
+            const response = res.data.message
+            var result = response.filter(obj => {
+                return obj.email === val.email
+            })
+            console.log('test',response, result)
+            if(result.length > 0){
+                if(val.password === result[0].password){
+                    let obj ={
+                        username:result[0].username,
+                        email:result[0].email,
+                        isadmin:result[0].isadmin
+                    }
+                    localStorage.setItem('userDetails', JSON.stringify(obj))
+                    router.push('/dashboard')
+                }
+                else{
+                    toast.error("Login Failed");
+                }    
+            }
+            else if(val.email === 'admin@example.com' && val.password === 'Admin@123'){
+                let obj ={
+                    username:val.email,
+                    email:val.password,
+                    isadmin:"true"
+                }
+                localStorage.setItem('userDetails', JSON.stringify(obj))
+                router.push('/dashboard')
+            }
+            else{
+                toast.error("Login Failed");
+            }
+        })
+        .catch((err)=>{ })
     }
 
   return (
@@ -92,6 +135,7 @@ const LoginPage = () => {
                 </Grid>
             </CardContent>
         </Card>
+        <ToastContainer />
     </Box>
   )
 }

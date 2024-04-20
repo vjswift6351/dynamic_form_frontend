@@ -17,3 +17,19 @@ export const updateUser = (id,obj) => {
 export const deleteUser = (id) => {
     return axios.delete(`${baseUrl}/deleteuser/${id}`)
 }
+
+export const getForm = () => {
+    return axios.get(`${baseUrl}/getforms`)
+}
+
+export const addForm = (obj) => {
+    return axios.post(`${baseUrl}/addforms`, obj)
+}
+
+export const updateForms = (id,obj) => {
+    return axios.put(`${baseUrl}/updateforms/${id}`, obj)
+}
+
+export const deleteForms = (id) => {
+    return axios.delete(`${baseUrl}/deleteforms/${id}`)
+}
