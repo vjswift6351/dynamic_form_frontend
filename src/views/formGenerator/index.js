@@ -124,7 +124,7 @@ const FormGenerator = ({formTitle, createForm, setCreateForm, defaultValues, for
       addForm(format).then(res => {
         const response = res.data;
         toast.success("Form Added");
-        // resetFormValues()
+        resetFormValues()
     })
     .catch((err)=>{console.log(err)})
   }
@@ -132,7 +132,7 @@ const FormGenerator = ({formTitle, createForm, setCreateForm, defaultValues, for
       updateForms(formId,format).then(res => {
           const response = res.data;
           toast.success("Form Updated");
-          // resetFormValues()
+          resetFormValues()
       })
       .catch((err)=>{console.log(err)})
   }
@@ -140,9 +140,9 @@ const FormGenerator = ({formTitle, createForm, setCreateForm, defaultValues, for
 
   const resetFormValues = () =>{
     reset({
-        username: "",
-        email: "",
-        password: ""
+      formName: "",
+      formDescription: "",
+      formsCollections: [],
     })
 }
 
