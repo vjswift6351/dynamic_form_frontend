@@ -130,7 +130,7 @@ const FormsListing = ({isadmin}) => {
             </>
         }
     </>
-  )
-}
+  );
+};
 
-export default FormsListing
+export default FormsListing;

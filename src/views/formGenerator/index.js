@@ -150,7 +150,13 @@ const FormGenerator = ({formTitle, createForm, setCreateForm, defaultValues, for
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <h1>{formTitle}</h1>
-      <Button variant="contained" sx={{float:'right'}} onClick={()=>setCreateForm(!createForm)}>Go Back</Button>
+      <Button
+        variant="contained"
+        sx={{ float: "right" }}
+        onClick={() => setCreateForm(!createForm)}
+      >
+        Go Back
+      </Button>
       {/* <p>
         The following example demonstrate the ability of building nested array
         fields.

@@ -1,18 +1,19 @@
-import axios from 'axios';
+import axios from "axios";
 
-const baseUrl = 'https://dynamic-form-backend-ruddy.vercel.app/api/v1/dynamicform'
+const baseUrl =
+  "https://dynamic-form-backend-ruddy.vercel.app/api/v1/dynamicform";
 
 export const getUser = () => {
-    return axios.get(`${baseUrl}/getuser`)
-}
+  return axios.get(`${baseUrl}/getuser`);
+};
 
 export const addUser = (obj) => {
-    return axios.post(`${baseUrl}/adduser`, obj)
-}
+  return axios.post(`${baseUrl}/adduser`, obj);
+};
 
-export const updateUser = (id,obj) => {
-    return axios.put(`${baseUrl}/updateuser/${id}`, obj)
-}
+export const updateUser = (id, obj) => {
+  return axios.put(`${baseUrl}/updateuser/${id}`, obj);
+};
 
 export const deleteUser = (id) => {
     return axios.delete(`${baseUrl}/deleteuser/${id}`)
