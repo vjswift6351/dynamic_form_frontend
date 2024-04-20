@@ -26,7 +26,6 @@ const UserListing = () => {
         setLoading(true)
         getUser().then(res => {
             const response = res.data;
-            console.log('test',response)
             setUserList(response.message)
             setLoading(false)
         })

@@ -14,7 +14,7 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 const ViewForm = ({formData, handleClose, submitForm}) => {
-  const { register, handleSubmit, setValue, getValues } = useForm();
+  const { register, handleSubmit, setValue, getValues, formState: { errors }} = useForm();
 
   const onSubmit = async (data) => {
     submitForm()
@@ -45,6 +45,9 @@ const ViewForm = ({formData, handleClose, submitForm}) => {
                           {data.label}
                         </InputLabel>
                         <Select
+                         {...register(data.name, {
+                            required: data.required,
+                          })}
                           label={data.label}
                           value={values.name}
                           onChange={(e) =>
@@ -59,6 +62,7 @@ const ViewForm = ({formData, handleClose, submitForm}) => {
                             );
                           })}
                         </Select>
+                        {errors[data.name]&& <span style={{color:'#bf0000'}}>{data.errorMessage}</span>}
                       </FormControl>
                     </Grid>
                   ) : (
@@ -71,6 +75,8 @@ const ViewForm = ({formData, handleClose, submitForm}) => {
                           required: data.required,
                         })}
                       />
+                      
+                     {errors[data.name]&& <span style={{color:'#bf0000'}}>{data.errorMessage}</span>}
                     </Grid>
                   )}
                 </>

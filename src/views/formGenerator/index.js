@@ -123,7 +123,6 @@ const FormGenerator = ({formTitle, createForm, setCreateForm, defaultValues, for
     if(formTitle === 'Create Form'){
       addForm(format).then(res => {
         const response = res.data;
-        console.log('test',response)
         toast.success("Form Added");
         // resetFormValues()
     })

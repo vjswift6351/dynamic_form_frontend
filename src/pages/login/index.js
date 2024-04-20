@@ -27,7 +27,6 @@ const LoginPage = () => {
     const router = useRouter()
 
     const onSubmit = data => {
-        console.log(data)
         getUserList(data)
     }
 
@@ -37,7 +36,6 @@ const LoginPage = () => {
             var result = response.filter(obj => {
                 return obj.email === val.email
             })
-            console.log('test',response, result)
             if(result.length > 0){
                 if(val.password === result[0].password){
                     let obj ={

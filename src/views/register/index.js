@@ -38,7 +38,6 @@ const RegisterPage = ({createUser, setCreateUser, pageTitle, editUser, getUserLi
         if(pageTitle === 'Create User'){
             addUser(data).then(res => {
                 const response = res.data;
-                console.log('test',response)
                 toast.success("User Added");
                 resetFormValues()
             })
@@ -47,7 +46,6 @@ const RegisterPage = ({createUser, setCreateUser, pageTitle, editUser, getUserLi
         else{
             updateUser(editUser._id,data).then(res => {
                 const response = res.data;
-                console.log('test',response)
                 toast.success("User Updated");
                 resetFormValues()
             })

@@ -38,7 +38,6 @@ const FormsListing = ({isadmin}) => {
         setLoading(true)
         getForm().then(res => {
             const response = res.data;
-            console.log('test',response)
             setFormsList(response.message)
             setLoading(false)
         })
