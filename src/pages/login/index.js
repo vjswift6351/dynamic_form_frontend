@@ -1,5 +1,5 @@
 import { Box, Button, Card, CardContent, CardHeader, FormControl, FormHelperText, Grid, InputLabel, OutlinedInput, TextField, Typography } from '@mui/material'
-import React from 'react'
+import React, { useState } from 'react'
 import * as yup from 'yup'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -7,6 +7,7 @@ import { getUser } from '@/services'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/router'
+import { LoadingButton } from '@mui/lab'
 
 const schema = yup.object().shape({
     email: yup.string().email().required(),
@@ -14,6 +15,7 @@ const schema = yup.object().shape({
   })
 
 const LoginPage = () => {
+    const[loading, setLoading] = useState(false)
     const {
         control,
         setError,
@@ -27,6 +29,7 @@ const LoginPage = () => {
     const router = useRouter()
 
     const onSubmit = data => {
+        setLoading(true)
         getUserList(data)
     }
 
@@ -45,9 +48,11 @@ const LoginPage = () => {
                     }
                     localStorage.setItem('userDetails', JSON.stringify(obj))
                     router.push('/dashboard')
+                    setLoading(false)
                 }
                 else{
                     toast.error("Login Failed");
+                    setLoading(false)
                 }    
             }
             else if(val.email === 'admin@example.com' && val.password === 'Admin@123'){
@@ -58,9 +63,11 @@ const LoginPage = () => {
                 }
                 localStorage.setItem('userDetails', JSON.stringify(obj))
                 router.push('/dashboard')
+                setLoading(false)
             }
             else{
                 toast.error("Login Failed");
+                setLoading(false)
             }
         })
         .catch((err)=>{ })
@@ -123,9 +130,9 @@ const LoginPage = () => {
                             </FormHelperText>
                         )}
                         </FormControl>
-                        <Button fullWidth size='large' type='submit' variant='contained' sx={{ mb: 4 }}>
+                        <LoadingButton loading={loading} fullWidth size='large' type='submit' variant='contained' sx={{ mb: 4 }}>
                             Login 
-                        </Button>
+                        </LoadingButton>
                     </form>               
                     </Grid>
 

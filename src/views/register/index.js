@@ -1,11 +1,12 @@
 import { Box, Button, Card, CardContent, CardHeader, FormControl, FormHelperText, Grid, InputLabel, OutlinedInput, TextField, Typography } from '@mui/material'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import * as yup from 'yup'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { addUser, updateUser } from '@/services'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { LoadingButton } from '@mui/lab'
 
 const schema = yup.object().shape({
     username: yup.string().required(),
@@ -14,6 +15,7 @@ const schema = yup.object().shape({
   })
 
 const RegisterPage = ({createUser, setCreateUser, pageTitle, editUser, getUserList}) => {
+    const[loading, setLoading] = useState(false)
     const {
         control,
         setError,
@@ -35,21 +37,24 @@ const RegisterPage = ({createUser, setCreateUser, pageTitle, editUser, getUserLi
     },[editUser])
 
     const onSubmit = data => {
+        setLoading(true)
         if(pageTitle === 'Create User'){
             addUser(data).then(res => {
                 const response = res.data;
                 toast.success("User Added");
                 resetFormValues()
+                setLoading(false)
             })
-            .catch((err)=>{console.log(err)})
+            .catch((err)=>{setLoading(false)})
         }
         else{
             updateUser(editUser._id,data).then(res => {
                 const response = res.data;
                 toast.success("User Updated");
                 resetFormValues()
+                setLoading(false)
             })
-            .catch((err)=>{console.log(err)})
+            .catch((err)=>{setLoading(false)})
         }
     }
 
@@ -140,9 +145,9 @@ const RegisterPage = ({createUser, setCreateUser, pageTitle, editUser, getUserLi
                             </FormHelperText>
                         )}
                         </FormControl>
-                        <Button fullWidth size='large' type='submit' variant='contained' sx={{ mb: 4 }}>
+                        <LoadingButton loading={loading} fullWidth size='large' type='submit' variant='contained' sx={{ mb: 4 }}>
                             Register
-                        </Button>
+                        </LoadingButton>
                         <Button onClick={()=> goBackFn()} fullWidth size='large' type='submit' variant='contained' sx={{ mb: 4 }}>
                             Go Back
                         </Button>

@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import FieldArray from "./fieldArray";
 import { Button, Grid, TextField } from "@mui/material";
 import { addForm, updateForms } from "@/services";
 import { ToastContainer, toast } from 'react-toastify';
+import { LoadingButton } from "@mui/lab";
 
 // const defaultValues = {
 //   formsCollections: [
@@ -86,6 +87,7 @@ import { ToastContainer, toast } from 'react-toastify';
 // };
 
 const FormGenerator = ({formTitle, createForm, setCreateForm, defaultValues, formId}) => {
+  const[loading, setLoading] = useState(false)
   const {
     control,
     register,
@@ -106,6 +108,7 @@ const FormGenerator = ({formTitle, createForm, setCreateForm, defaultValues, for
   // }, []);
 
   const onSubmit = (data) => {
+    setLoading(true)
     let updateForm = data.formsCollections;
     updateForm.map((data, i) => {
       data.name = data.label.replace(/\s/g, "").toLowerCase();
@@ -125,6 +128,7 @@ const FormGenerator = ({formTitle, createForm, setCreateForm, defaultValues, for
         const response = res.data;
         toast.success("Form Added");
         resetFormValues()
+        setLoading(false)
     })
     .catch((err)=>{console.log(err)})
   }
@@ -133,8 +137,9 @@ const FormGenerator = ({formTitle, createForm, setCreateForm, defaultValues, for
           const response = res.data;
           toast.success("Form Updated");
           resetFormValues()
+          setLoading(false)
       })
-      .catch((err)=>{console.log(err)})
+      .catch((err)=>{setLoading(false)})
   }
   };
 
@@ -215,9 +220,9 @@ const FormGenerator = ({formTitle, createForm, setCreateForm, defaultValues, for
           </Button>
         </Grid>
         <Grid item>
-          <Button color="success" variant="contained" type="submit">
+          <LoadingButton loading={loading} color="success" variant="contained" type="submit">
             Save Form
-          </Button>
+          </LoadingButton>
         </Grid>
       </Grid>
 

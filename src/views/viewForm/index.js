@@ -50,6 +50,8 @@ const ViewForm = ({formData, handleClose, submitForm}) => {
                           })}
                           label={data.label}
                           value={values.name}
+                          defaultValue={data.defaultValue}
+                          disabled={data.disabled}
                           onChange={(e) =>
                             setValue(data.name, e.target.value, true)
                           }
@@ -71,6 +73,8 @@ const ViewForm = ({formData, handleClose, submitForm}) => {
                         fullWidth
                         type={data.type}
                         label={data.label}
+                        defaultValue={data.defaultValue}
+                        disabled={data.disabled}
                         {...register(data.name, {
                           required: data.required,
                         })}
